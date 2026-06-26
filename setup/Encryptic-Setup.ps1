@@ -1,4 +1,4 @@
-# Encryptic Anti-Cheat — interactive setup wizard
+# Encryptic Anti-Cheat - interactive setup wizard
 # Run via setup.bat from repo root
 
 $ErrorActionPreference = "Stop"
@@ -274,25 +274,25 @@ Set Encryptic as autoload. Ship encryptic_config.json with your game binary.
     "5" {
         Copy-Item (Join-Path $Root "examples\native\main.cpp") (Join-Path $engineFolder "example_main.cpp")
         $engineLabel = "Native C++"
-        $installSteps = @"
+        $installSteps = @'
 Link encryptic_core.dll + encryptic_core_static.lib from build/core/Release/
 
   encryptic_start_from_file("encryptic_config.json");
   while (running) encryptic_tick();
-"@
+'@
     }
     "6" {
         Copy-Item -Recurse (Join-Path $Root "engines\roblox\ServerScriptService\Encryptic") (Join-Path $engineFolder "ServerScriptService\Encryptic") -Force
         Copy-Item (Join-Path $Root "engines\roblox\README.md") (Join-Path $engineFolder "README.md")
         $engineLabel = "Roblox"
-        $installSteps = @"
+        $installSteps = @'
 Roblox uses SERVER-SIDE anti-cheat only (no native DLL).
 
 Copy engine/ServerScriptService/Encryptic into your experience.
 In ServerScriptService: require(Encryptic).start({ maxSpeed = 32 })
 
 Also run PC launcher with encryptic_core for external telemetry if needed.
-"@
+'@
     }
     default {
         Copy-Item -Recurse (Join-Path $Root "engines\unity-il2cpp\Runtime") (Join-Path $engineFolder "Encryptic") -Force
@@ -313,49 +313,34 @@ In first scene:
 
 # Telemetry starter
 if ($enableTelemetry -and $hasNode) {
-    $telemetryBat = @"
+  $serverSrc = Join-Path $Root "server\examples\node\server.js"
+  Copy-Item $serverSrc (Join-Path $distDir "start_telemetry_server.js") -Force
+
+  $telemetryBat = @'
 @echo off
 cd /d "%~dp0"
-echo Starting Encryptic telemetry server on port $telemetryPort ...
-node "%~dp0..\..\server\examples\node\server.js"
-pause
-"@
-    # Patch port in copied script - create local server launcher
-    $localServer = @"
-const http = require("http");
-const PORT = $telemetryPort;
-const API_KEY = "$apiKey";
-function readBody(req) { return new Promise(r => { let d=""; req.on("data",c=>d+=c); req.on("end",()=>r(d)); }); }
-const server = http.createServer(async (req, res) => {
-  if (req.headers["x-encryptic-key"] !== API_KEY) { res.writeHead(401); return res.end("unauthorized"); }
-  const body = await readBody(req);
-  if (req.url === "/v1/violations" && req.method === "POST") { console.log("[violation]", body); res.writeHead(200); return res.end('{"ok":true}'); }
-  if (req.url === "/v1/heartbeat" && req.method === "POST") { console.log("[heartbeat]", body); res.writeHead(200); return res.end('{"ok":true}'); }
-  res.writeHead(404); res.end("not found");
-});
-server.listen(PORT, () => console.log("Encryptic telemetry http://127.0.0.1:" + PORT));
-"@
-    $localServer | Set-Content (Join-Path $distDir "start_telemetry_server.js") -Encoding UTF8
-    @"
-@echo off
-cd /d "%~dp0"
-echo Encryptic telemetry + heartbeat receiver
+echo Encryptic telemetry + heartbeat receiver on port __PORT__
+set ENCRYPTIC_PORT=__PORT__
 node start_telemetry_server.js
-"@ | Set-Content (Join-Path $distDir "START_TELEMETRY.bat") -Encoding ASCII
+pause
+'@.Replace('__PORT__', $telemetryPort)
+
+  $telemetryBat | Set-Content (Join-Path $distDir "START_TELEMETRY.bat") -Encoding ASCII
 }
 
 # INSTALL readme
+$generatedAt = Get-Date -Format 'yyyy-MM-dd HH:mm'
 $readme = @"
-ENCRYPTIC ANTI-CHEAT — INSTALL PACKAGE
+ENCRYPTIC ANTI-CHEAT - INSTALL PACKAGE
 ======================================
 Game: $gameName
 Engine: $engineLabel
 Preset: $preset
-Generated: $(Get-Date -Format "yyyy-MM-dd HH:mm")
+Generated: $generatedAt
 
-WHAT'S INCLUDED (REAL PROTECTIONS)
----------------------------------
-[Client] DLL injection guard, debugger (10+ checks), API hooks, memory integrity
+WHAT IS INCLUDED
+----------------
+[Client] DLL injection guard, debugger checks, API hooks, memory integrity
 [Client] Process + service scan, overlay detection, synthetic input, watchdog thread
 [Client] Self-integrity CRC on encryptic_core.dll, launch watermark
 [Client] Telemetry JSON + heartbeat (when server running)
@@ -371,7 +356,8 @@ engine/                  - copy into your game project
 QUICK START
 -----------
 1. Run START_TELEMETRY.bat (keep window open during dev)
-2. $installSteps
+2. Install steps:
+$installSteps
 3. Ship encryptic_config.json beside your game .exe (or StreamingAssets)
 4. Call encryptic_tick() every frame / Update()
 
@@ -393,7 +379,7 @@ $readme | Set-Content (Join-Path $distDir "INSTALL.txt") -Encoding UTF8
 if ($gamePath) {
     Write-Host "[4/5] Copying to game project: $gamePath" -ForegroundColor Green
     if (-not (Test-Path $gamePath)) {
-        Write-Host "  Path not found — skipped." -ForegroundColor Yellow
+        Write-Host "  Path not found - skipped." -ForegroundColor Yellow
     } else {
         switch ($engineChoice) {
             "2" {
@@ -434,10 +420,10 @@ if ($gamePath) {
 
 Write-Host "[5/5] Done!" -ForegroundColor Green
 Write-Host ""
-Write-Host "  Package: dist\$distName" -ForegroundColor Cyan
-Write-Host "  1) Run dist\$distName\START_TELEMETRY.bat" -ForegroundColor White
-Write-Host "  2) Follow dist\$distName\INSTALL.txt" -ForegroundColor White
-Write-Host "  3) Read docs\server-validation.md for server rules" -ForegroundColor White
+Write-Host "  Package: $(Join-Path 'dist' $distName)" -ForegroundColor Cyan
+Write-Host "  1) Run $(Join-Path 'dist' $distName 'START_TELEMETRY.bat')" -ForegroundColor White
+Write-Host "  2) Follow $(Join-Path 'dist' $distName 'INSTALL.txt')" -ForegroundColor White
+Write-Host "  3) Read docs/server-validation.md for server rules" -ForegroundColor White
 Write-Host ""
 
 exit 0
