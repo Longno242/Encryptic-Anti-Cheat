@@ -1,0 +1,71 @@
+{
+  "preset": "aggressive",
+  "session_id": "test-game-session",
+  "guards": {
+    "dll_guard": true,
+    "debugger_guard": true,
+    "hook_guard": true,
+    "memory_guard": true,
+    "module_whitelist": false,
+    "thread_guard": true,
+    "timing_guard": true,
+    "handle_guard": true,
+    "process_guard": true,
+    "vm_guard": false,
+    "overlay_guard": false,
+    "input_guard": true,
+    "watchdog_guard": true,
+    "anti_tamper": true
+  },
+  "intervals_ms": {
+    "hook_scan": 1500,
+    "memory_scan": 1000,
+    "thread_scan": 1500,
+    "handle_scan": 3000,
+    "timing_check": 500,
+    "process_scan": 2000,
+    "overlay_scan": 3000,
+    "input_scan": 1000,
+    "watchdog": 1000,
+    "integrity_scan": 5000
+  },
+  "blocked_processes": [
+    "cheatengine", "x64dbg", "x32dbg", "ida64", "ida", "processhacker",
+    "reclass", "httpdebugger", "ollydbg", "windbg", "immunitydebugger"
+  ],
+  "debugger_blocked_services": [
+    "KProcessHacker3", "KSystemInformer", "HttpDebuggerPro", "x64dbg"
+  ],
+  "allowed_modules": [],
+  "overlay_whitelist": [
+    "Steam", "Discord", "Xbox", "GameBar", "NVIDIA", "GeForce"
+  ],
+  "telemetry": {
+    "enabled": true,
+    "endpoint_url": "http://127.0.0.1:8787/v1/violations",
+    "api_key": "dev-key-change-me",
+    "flush_interval_ms": 2000
+  },
+  "heartbeat": {
+    "enabled": false,
+    "endpoint_url": "http://127.0.0.1:8787/v1/heartbeat",
+    "session_token": "test-game",
+    "hmac_secret": "change-me",
+    "interval_ms": 10000,
+    "miss_threshold": 2
+  },
+  "integrity": {
+    "self_integrity": true,
+    "game_file_integrity": false,
+    "file_manifest": []
+  },
+  "screenshot": {
+    "on_critical": true,
+    "output_dir": "encryptic_captures"
+  },
+  "watermark": {
+    "enabled": true,
+    "show_on_launch": true,
+    "game_title": "Encryptic Test Game"
+  }
+}

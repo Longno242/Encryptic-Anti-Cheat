@@ -1,0 +1,9 @@
+[configuration]
+
+entry_symbol = "encryptic_gdextension_init"
+compatibility_minimum = "4.2"
+
+[libraries]
+
+windows.debug.x86_64 = "bin/encryptic_gdextension.dll"
+windows.release.x86_64 = "bin/encryptic_gdextension.dll"

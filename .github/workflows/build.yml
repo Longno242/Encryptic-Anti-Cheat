@@ -1,0 +1,23 @@
+name: Build
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -B build -DENCRYPTIC_BUILD_SHARED=ON -DENCRYPTIC_BUILD_EXAMPLES=ON
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Verify artifacts
+        run: |
+          if (!(Test-Path build/core/Release/encryptic_core.dll)) { exit 1 }
+          if (!(Test-Path build/examples/watermark_preview/Release/watermark_preview.exe)) { exit 1 }

@@ -1,0 +1,4 @@
+cmake_minimum_required(VERSION 3.16)
+
+add_executable(encryptic_native_example main.cpp)
+target_link_libraries(encryptic_native_example PRIVATE encryptic_core_static)
