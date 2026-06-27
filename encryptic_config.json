@@ -1,0 +1,133 @@
+{
+  "preset": "balanced",
+  "session_id": "auto-generated-at-runtime",
+  "kick_on_critical": false,
+  "block_unknown_dlls": false,
+  "terminate_on_debugger": false,
+  "guards": {
+    "dll_guard": true,
+    "debugger_guard": true,
+    "hook_guard": true,
+    "memory_guard": true,
+    "module_whitelist": false,
+    "thread_guard": true,
+    "timing_guard": true,
+    "handle_guard": true,
+    "process_guard": true,
+    "threat_intel_guard": true,
+    "injection_guard": true,
+    "anti_bypass_guard": true,
+    "hash_guard": true,
+    "pipe_guard": true,
+    "kernel_guard": false,
+    "vm_guard": false,
+    "overlay_guard": true,
+    "input_guard": true,
+    "watchdog_guard": true,
+    "anti_tamper": true
+  },
+  "intervals_ms": {
+    "hook_scan": 5000,
+    "memory_scan": 3000,
+    "thread_scan": 4000,
+    "handle_scan": 10000,
+    "timing_check": 1000,
+    "process_scan": 8000,
+    "threat_intel_scan": 5000,
+    "injection_scan": 6000,
+    "anti_bypass_scan": 4000,
+    "hash_scan": 20000,
+    "pipe_scan": 7000,
+    "kernel_poll": 1000,
+    "overlay_scan": 6000,
+    "input_scan": 2000,
+    "watchdog": 2000,
+    "integrity_scan": 15000
+  },
+  "blocked_processes": [
+    "cheatengine", "cheat engine", "x64dbg", "x32dbg", "ida64", "ida",
+    "processhacker", "reclass", "httpdebugger", "ollydbg", "windbg",
+    "immunitydebugger", "artmoney", "tsearch", "wemod", "xenos",
+    "extremeinjector", "ghinjector", "injector", "trainer", "speedhack",
+    "memoryeditor", "gameguardian", "dnspy", "de4dot", "scylla", "hxd",
+    "hiew", "lordpe", "petools", "megadumper", "ksdumper"
+  ],
+  "blocked_modules": [
+    "dbk32.dll", "dbk64.dll", "cedebug.dll", "vehdebug.dll", "speedhack.dll",
+    "luaclient.dll", "cehook.dll", "ceserver.dll", "blackbone.dll",
+    "injector.dll", "xenos.dll", "extremeinjector"
+  ],
+  "blocked_window_classes": [
+    "TfrmCheatEngine", "TfrmAutoInject", "TfrmMemoryRecords", "TfrmLuaEngine",
+    "TfrmStructures2", "TCETrainer", "TfrmAddresslist", "TMemoryBrowser"
+  ],
+  "blocked_window_titles": [
+    "cheat engine", "memory view", "add address", "pointer scan", "speedhack",
+    "artmoney", "process hacker", "x64dbg", "extreme injector", "xenos injector",
+    "guided hacking", "wemod", "trainer", "memory scanner", "reclass.net"
+  ],
+  "blocked_path_segments": [
+    "\\cheat engine\\", "\\cheatengine\\", "\\ce tables\\", "\\trainers\\",
+    "\\injectors\\", "\\x64dbg\\", "\\process hacker\\", "\\artmoney\\",
+    "\\wemod\\", "\\guidedhacking\\", "\\extreme injector\\"
+  ],
+  "blocked_drivers": [
+    "dbk64", "dbk32", "CEDRIVER", "CEDRIVER73", "CEDRIVER74",
+    "kprocesshacker", "kprocesshacker3", "ksysteminformer", "dbvm"
+  ],
+  "blocked_pipes": [
+    "cedriver", "dbk", "cheatengine", "ce_", "ceserver", "dbvm", "blackbone"
+  ],
+  "blocked_mutexes": [
+    "DBVM", "CEDRIVER", "DBK", "CE_", "DBK64", "DBK32"
+  ],
+  "known_cheat_hashes": [],
+  "kernel": {
+    "protect_handles": true,
+    "block_drivers": true,
+    "block_modules": true,
+    "block_global_cheats": false,
+    "poll_interval_ms": 1000,
+    "device_path": "\\\\.\\EncrypticGuard"
+  },
+  "debugger_blocked_services": [
+    "KProcessHacker3", "KSystemInformer", "HttpDebuggerPro", "x64dbg"
+  ],
+  "allowed_modules": [
+    "encryptic_core.dll",
+    "UnityPlayer.dll",
+    "GameAssembly.dll",
+    "steam_api64.dll"
+  ],
+  "overlay_whitelist": [
+    "Steam", "Discord", "Xbox", "GameBar", "NVIDIA", "GeForce"
+  ],
+  "telemetry": {
+    "enabled": true,
+    "endpoint_url": "http://127.0.0.1:8787/v1/violations",
+    "api_key": "dev-key-change-me",
+    "flush_interval_ms": 5000
+  },
+  "heartbeat": {
+    "enabled": true,
+    "endpoint_url": "http://127.0.0.1:8787/v1/heartbeat",
+    "session_token": "",
+    "hmac_secret": "change-me",
+    "interval_ms": 30000,
+    "miss_threshold": 2
+  },
+  "integrity": {
+    "self_integrity": true,
+    "game_file_integrity": false,
+    "file_manifest": []
+  },
+  "screenshot": {
+    "on_critical": true,
+    "output_dir": "encryptic_captures"
+  },
+  "watermark": {
+    "enabled": true,
+    "show_on_launch": true,
+    "game_title": "Your Game"
+  }
+}

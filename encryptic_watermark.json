@@ -1,0 +1,25 @@
+{
+  "enabled": true,
+  "show_on_launch": true,
+  "fullscreen_dim": false,
+  "allow_skip": false,
+  "game_title": "Your Game",
+  "brand_title": "Encryptic",
+  "brand_subtitle": "Anti-Cheat",
+  "status_text": "Starting protection service",
+  "footer_text": "All rights reserved. Encryptic Ltd.",
+  "version_text": "1.0.0",
+  "display_duration_ms": 5200,
+  "fade_in_ms": 380,
+  "fade_out_ms": 520,
+  "accent_color": [74, 158, 255],
+  "card_color": [24, 25, 28],
+  "show_progress_bar": true,
+  "show_logo_mark": true,
+  "loading_stages": [
+    "Starting protection service",
+    "Scanning runtime environment",
+    "Validating module integrity",
+    "Establishing secure session"
+  ]
+}

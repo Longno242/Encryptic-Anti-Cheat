@@ -1,0 +1,50 @@
+;
+; EncrypticGuard kernel driver installation INF
+;
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System
+ClassGuid   = {4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider    = %ManufacturerName%
+CatalogFile = EncrypticGuard.cat
+DriverVer   = 06/26/2026,1.0.0.0
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+EncrypticGuard.sys = 1,,
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTamd64
+
+[Standard.NTamd64]
+%EncrypticGuard.DeviceDesc% = EncrypticGuard.Install, Root\EncrypticGuard
+
+[EncrypticGuard.Install]
+CopyFiles = EncrypticGuard.CopyFiles
+
+[EncrypticGuard.CopyFiles]
+EncrypticGuard.sys
+
+[EncrypticGuard.Install.Services]
+AddService = EncrypticGuard,%SPSVCINST_ASSOCSERVICE%, EncrypticGuard.Service
+
+[EncrypticGuard.Service]
+DisplayName    = %EncrypticGuard.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %13%\EncrypticGuard.sys
+LoadOrderGroup = Extended Base
+
+[Strings]
+ManufacturerName       = "Encryptic Anti-Cheat"
+DiskName               = "EncrypticGuard Driver Disk"
+EncrypticGuard.DeviceDesc = "Encryptic Kernel Guard Driver"
+EncrypticGuard.SvcDesc = "Encryptic Kernel Guard"

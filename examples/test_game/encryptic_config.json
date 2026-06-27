@@ -1,0 +1,93 @@
+{
+  "preset": "aggressive",
+  "session_id": "test-game-session",
+  "kick_on_critical": false,
+  "block_unknown_dlls": true,
+  "guards": {
+    "dll_guard": true,
+    "debugger_guard": true,
+    "hook_guard": true,
+    "memory_guard": true,
+    "module_whitelist": false,
+    "thread_guard": true,
+    "timing_guard": true,
+    "handle_guard": true,
+    "process_guard": true,
+    "threat_intel_guard": true,
+    "injection_guard": true,
+    "anti_bypass_guard": true,
+    "hash_guard": true,
+    "pipe_guard": true,
+    "kernel_guard": true,
+    "vm_guard": false,
+    "overlay_guard": false,
+    "input_guard": true,
+    "watchdog_guard": true,
+    "anti_tamper": true
+  },
+  "intervals_ms": {
+    "hook_scan": 1500,
+    "memory_scan": 1000,
+    "thread_scan": 1500,
+    "handle_scan": 3000,
+    "timing_check": 500,
+    "process_scan": 2000,
+    "threat_intel_scan": 2000,
+    "injection_scan": 2000,
+    "anti_bypass_scan": 1500,
+    "hash_scan": 10000,
+    "pipe_scan": 3000,
+    "kernel_poll": 1000,
+    "overlay_scan": 3000,
+    "input_scan": 1000,
+    "watchdog": 1000,
+    "integrity_scan": 5000
+  },
+  "blocked_processes": [
+    "cheatengine", "cheat engine", "x64dbg", "x32dbg", "ida64", "ida",
+    "processhacker", "reclass", "artmoney", "tsearch", "wemod", "xenos",
+    "extremeinjector", "trainer", "speedhack", "dnspy"
+  ],
+  "blocked_modules": [
+    "dbk32.dll", "dbk64.dll", "cedebug.dll", "vehdebug.dll", "speedhack.dll"
+  ],
+  "blocked_pipes": ["cedriver", "dbk", "cheatengine", "dbvm"],
+  "blocked_mutexes": ["DBVM", "CEDRIVER", "DBK64", "DBK32"],
+  "known_cheat_hashes": [],
+  "kernel": {
+    "protect_handles": true,
+    "block_drivers": true,
+    "poll_interval_ms": 1000
+  },
+  "debugger_blocked_services": [
+    "KProcessHacker3", "KSystemInformer", "HttpDebuggerPro", "x64dbg"
+  ],
+  "telemetry": {
+    "enabled": true,
+    "endpoint_url": "http://127.0.0.1:8787/v1/violations",
+    "api_key": "dev-key-change-me",
+    "flush_interval_ms": 2000
+  },
+  "heartbeat": {
+    "enabled": false,
+    "endpoint_url": "http://127.0.0.1:8787/v1/heartbeat",
+    "session_token": "test-game",
+    "hmac_secret": "change-me",
+    "interval_ms": 10000,
+    "miss_threshold": 2
+  },
+  "integrity": {
+    "self_integrity": true,
+    "game_file_integrity": false,
+    "file_manifest": []
+  },
+  "screenshot": {
+    "on_critical": true,
+    "output_dir": "encryptic_captures"
+  },
+  "watermark": {
+    "enabled": true,
+    "show_on_launch": true,
+    "game_title": "Encryptic Test Game"
+  }
+}
