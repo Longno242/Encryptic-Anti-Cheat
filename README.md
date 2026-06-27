@@ -1,86 +1,13 @@
 # Encryptic Anti-Cheat
 
-Modular anti-cheat for **Roblox** (server Luau) and **Windows** games (C++ core + engine wrappers).
+Modular **Windows** anti-cheat: one C++ core with thin wrappers for Unity, Unreal, Godot, and native games.
 
-Built for developers who want real detection hooks—not just config files—with a Studio-ready demo you can import and test in minutes.
-
----
-
-## Roblox (server-side) — start here
-
-Roblox experiences **cannot** load native DLLs. Encryptic runs **100% on the server** in `ServerScriptService` and validates movement, remotes, combat, and exploit patterns authoritatively.
-
-### Quick install (Studio)
-
-1. Import **`engines/roblox/demo/EncrypticDemo.rbxmx`** (File → Import, or drag into Explorer).
-2. Move instances:
-   - **`Encryptic`** folder → `ServerScriptService`
-   - **`DemoGame`** → `ServerScriptService`
-   - **`DemoClient`** → `StarterPlayer → StarterPlayerScripts`
-3. Press **Play**. Open the test panel with **AC** (top-right) or **RightControl**.
-4. Watch **View → Output → Server** for `[Encryptic]` violation lines.
-
-Full walkthrough: [`engines/roblox/demo/DEMO_SETUP.md`](engines/roblox/demo/DEMO_SETUP.md)
-
-### Use in your own game
-
-Copy `engines/roblox/ServerScriptService/Encryptic/` into your place, then:
-
-```lua
-local Encryptic = require(game.ServerScriptService.Encryptic.init)
-
-Encryptic.start({
-	maxSpeed = 48,
-	maxWalkSpeed = 24,
-	maxFireRate = 12,
-	maxRemotePerSecond = 40,
-	maxStrikes = 5,
-	enableFlyGuard = true,
-	enableNoclipGuard = true,
-	enableExploitGuard = true,
-})
-```
-
-Wire your systems:
-
-```lua
--- Guns
-if not Encryptic.FireRateGuard.recordShot(player) then return end
-
--- Remotes
-Encryptic.RemoteGuard.wrapRemoteEvent(myRemote, function(player, ...)
-	-- your handler
-end)
-
--- Melee reach
-if not Encryptic.HitGuard.validateHit(attacker, targetChar, hitPos) then return end
-```
-
-### Roblox guards
-
-| Guard | Detects |
-|-------|---------|
-| **MovementGuard** | Horizontal speed / velocity hacks |
-| **TeleportGuard** | Large position jumps (teleport) |
-| **HumanoidGuard** | WalkSpeed, JumpPower, JumpHeight, HipHeight tamper |
-| **FlyGuard** | PlatformStand fly, mid-air hover |
-| **NoclipGuard** | Character parts with collision disabled |
-| **FireRateGuard** | Shot rate limits |
-| **RemoteGuard** | RemoteEvent spam |
-| **ToolGuard** | Tool equip spam |
-| **HitGuard** | Hit distance / reach exploits |
-| **ExploitGuard** | Suspicious remote names |
-| **BanManager** | Strike system → warn / kick |
-
-More detail: [`engines/roblox/README.md`](engines/roblox/README.md)
+> **Roblox developer?** Server-side Luau anti-cheat lives in its own repo:  
+> **[github.com/Longno242/Encryptic-Roblox-Anti-Cheat](https://github.com/Longno242/Encryptic-Roblox-Anti-Cheat)**
 
 ---
 
-## Windows client (C++ core)
-
-One shared library, thin wrappers per engine: Unity (IL2CPP + Mono), Unreal, Godot, native C++.
-
-### Quick start
+## Quick start
 
 **New project?** Run `setup.bat` — builds the DLL, walks through options, outputs a copy-ready folder under `dist/`.
 
@@ -88,7 +15,9 @@ One shared library, thin wrappers per engine: Unity (IL2CPP + Mono), Unreal, God
 
 **Watermark preview:** `test.bat` + edit `encryptic_watermark.json`.
 
-### Build
+---
+
+## Build
 
 ```powershell
 cmake -B build -DENCRYPTIC_BUILD_SHARED=ON -DENCRYPTIC_BUILD_EXAMPLES=ON
@@ -97,7 +26,9 @@ cmake --build build --config Release
 
 Output: `build/core/Release/encryptic_core.dll`
 
-### Config
+---
+
+## Config
 
 | File | Purpose |
 |------|---------|
@@ -111,29 +42,58 @@ encryptic_tick();
 
 Presets: `Minimal`, `Balanced`, `Aggressive`. See [`docs/features.md`](docs/features.md).
 
-### Windows guards (high level)
+---
 
-DllGuard · DebuggerGuard · HookGuard · MemoryGuard · ThreadGuard · TimingGuard · ProcessGuard · ThreatIntelGuard · InjectionGuard · AntiBypassGuard · HashGuard · PipeGuard · InputGuard · HeartbeatGuard · IntegrityGuard · WatchdogGuard · KernelGuard (optional driver)
+## Guards
 
-Kernel driver docs (session-scoped, whitelists EAC/BattlEye/Steam/Roblox): [`docs/kernel-driver.md`](docs/kernel-driver.md)
+| Guard | Does |
+|-------|------|
+| DllGuard | Module scan, optional LoadLibrary hook |
+| DebuggerGuard | Debugger / breakpoint checks |
+| HookGuard | Kernel32/ntdll hook detection |
+| MemoryGuard | Checksum regions you register |
+| ThreadGuard | Weird thread start addresses |
+| TimingGuard | QPC vs GetTickCount drift |
+| ProcessGuard | Blocked cheat tool process names |
+| ThreatIntelGuard | CE modules, drivers, overlay patterns |
+| InjectionGuard | Suspicious parent chain, temp DLL loads |
+| AntiBypassGuard | Kernel debugger, hide-from-debugger |
+| HashGuard | Known cheat binary SHA256 |
+| PipeGuard | Named pipes / mutex patterns |
+| InputGuard | SendInput-style mismatches |
+| HeartbeatGuard | HMAC session pings |
+| IntegrityGuard | CRC on core DLL + manifest |
+| WatchdogGuard | Background canary thread |
+| KernelGuard | Optional session-scoped driver |
+| Watermark | EAC-style launch card |
+
+Kernel driver (whitelists EAC, BattlEye, Steam, Roblox): [`docs/kernel-driver.md`](docs/kernel-driver.md)
 
 ---
 
-## Repo layout
+## Engine folders
 
 ```
-engines/roblox/              Roblox server Luau + Studio demo + EncrypticDemo.rbxmx
 core/                        C++ anti-cheat library
 engines/unity-il2cpp/        Unity IL2CPP wrapper
 engines/unity-mono/          Unity Mono wrapper
 engines/unreal-engine/       Unreal plugin
 engines/godot/               Godot integration
 engines/native/              Native C++ sample
+engines/roblox/              → links to Roblox repo (Luau is separate)
 examples/test_game/          Windows test harness
-setup/                       Install scripts (incl. kernel driver)
-docs/                        Feature + integration docs
-server/examples/             Node + Python telemetry receivers
+setup/                       Install scripts
+docs/
+server/examples/             Telemetry receivers
 ```
+
+---
+
+## Roblox
+
+Roblox cannot load native DLLs. Use the dedicated server Luau package:
+
+**[Encryptic-Roblox-Anti-Cheat](https://github.com/Longno242/Encryptic-Roblox-Anti-Cheat)** — guards, Studio demo, `EncrypticDemo.rbxmx`, test GUI.
 
 ---
 
@@ -143,7 +103,7 @@ server/examples/             Node + Python telemetry receivers
 node server/examples/node/server.js
 ```
 
-Default port `8787`. Point `encryptic_config.json` telemetry URL at `http://127.0.0.1:8787/v1/violations`.
+Default port `8787`. Point `encryptic_config.json` at `http://127.0.0.1:8787/v1/violations`.
 
 ---
 
@@ -153,7 +113,6 @@ Default port `8787`. Point `encryptic_config.json` telemetry URL at `http://127.
 - [Features](docs/features.md)
 - [Server validation](docs/server-validation.md)
 - [Anti-bypass notes](docs/anti-bypass.md)
-- [Roblox integration](engines/roblox/README.md)
 - [Contributing](CONTRIBUTING.md)
 
 ---
